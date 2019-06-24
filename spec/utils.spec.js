@@ -128,7 +128,6 @@ describe("formatComments", () => {
   it("renames the `created_by` property to `author`", () => {
     const comments = [{ created_by: "butter_bridge" }];
     const actual = formatComments(comments);
-    // const expected = [{ author: "butter_bridge" }];
     expect(actual[0]).to.include({ author: "butter_bridge" });
     expect(actual[0]).to.not.include.keys("created_by");
   });
@@ -138,12 +137,16 @@ describe("formatComments", () => {
     expect(actual[0]).to.include.keys("article_id");
     expect(actual[0]).to.not.include.keys("belongs_to");
   });
-  it("gives the correct id correcpsponding to the original title to the new article_id", () => {
+  it("gives the correct id correspsponding to the original title to the new article_id", () => {
     const comments = [{ belongs_to: "They're not exactly dogs, are they?" }];
     const articleRef = { "They're not exactly dogs, are they?": 99 };
-    const actual = formatComments(comments);
+    const actual = formatComments(comments, articleRef);
     expect(actual[0]).to.include({ article_id: 99 });
   });
+  it("has a `created_at` value converted into a javascript date object", () => {
+    const comments = [{ created_at: 1289996514171 }];
+    const articleRef = { "They're not exactly dogs, are they?": 99 };
+    const actual = formatComments(comments, articleRef);
+    expect(actual[0].created_at).to.equal("Wed, 17 Nov 2010 12:21:54 GMT");
+  });
 });
-
-// The value of the new `article_id` key must be the id corresponding to the original title value provided
