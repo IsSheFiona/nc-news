@@ -149,4 +149,26 @@ describe("formatComments", () => {
     const actual = formatComments(comments, articleRef);
     expect(actual[0].created_at).to.equal("Wed, 17 Nov 2010 12:21:54 GMT");
   });
+  it("maintains the rest of the comment's properties", () => {
+    const comments = [
+      {
+        body: "The owls are not what they seem.",
+        belongs_to: "They're not exactly dogs, are they?",
+        created_by: "icellusedkars",
+        votes: 20,
+        created_at: 1006778163389
+      }
+    ];
+    const articleRef = { "They're not exactly dogs, are they?": 99 };
+    const actual = formatComments(comments, articleRef);
+    expect(actual).to.eql([
+      {
+        article_id: 99,
+        body: "The owls are not what they seem.",
+        author: "icellusedkars",
+        votes: 20,
+        created_at: "Mon, 26 Nov 2001 12:36:03 GMT"
+      }
+    ]);
+  });
 });

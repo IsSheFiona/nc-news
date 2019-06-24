@@ -21,9 +21,12 @@ exports.formatComments = (comments, articleRef = {}) => {
   const newComments = comments.map(comment => {
     const newComment = {
       author: comment.created_by,
-      article_id: articleRef[comment.belongs_to]
+      article_id: articleRef[comment.belongs_to],
+      body: comment.body,
+      votes: comment.votes,
+      created_at: new Date(comment.created_at).toUTCString()
     };
     return newComment;
   });
-  return formatDate(newComments);
+  return newComments;
 };
