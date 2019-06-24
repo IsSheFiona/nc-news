@@ -10,5 +10,6 @@ exports.up = function(knex, Promise) {
 };
 
 exports.down = function(knex, Promise) {
+  console.log("users");
   return knex.schema.dropTable("users");
 };
