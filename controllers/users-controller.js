@@ -6,7 +6,7 @@ const sendUserByUsername = (req, res, next) => {
     .then(user => {
       res.status(200).send({ user });
     })
-    .catch(next);
+    .catch(err => next(err));
 };
 
 module.exports = { sendUserByUsername };

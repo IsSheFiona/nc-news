@@ -6,6 +6,7 @@
   "scripts": {
     "setup-dbs": "psql -f ./db/setup.sql",
     "seed": "knex seed:run",
+    "seed-test": "NODE_ENV=test knex seed:run",
     "migrate-make": "knex migrate:make",
     "migrate-latest": "knex migrate:latest",
     "migrate-rollback": "knex migrate:rollback",
@@ -25,9 +26,11 @@
   "homepage": "https://github.com/northcoders/be-nc-news#readme",
   "dependencies": {
     "chai": "^4.2.0",
+    "express": "^4.17.1",
     "knex": "^0.17.6",
     "mocha": "^6.1.4",
-    "pg": "^7.11.0"
+    "pg": "^7.11.0",
+    "supertest": "^4.0.2"
   },
   "devDependencies": {}
 }
