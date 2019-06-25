@@ -8,21 +8,18 @@ const connection = require("../db/connection.js");
 describe("/", () => {
   after(() => {
     connection.destroy();
-    beforeEach(() => connection.seed.run());
-    describe("/api", () => {
-      describe("/topics", () => {
-        it("GET status code 200, response with an array of topic", () => {
-          return request(app)
-            .get("/api/topics")
-            .expect(200);
-          // .then(({ body }) => {
-          //   expect(body.treasures).to.be.an("array");
-          //   expect(body.treasures[0]).to.contain.keys(
-          //     "treasure_id",
-          //     "treasure_name",
-          //   );
-          // });
-        });
+  });
+  beforeEach(() => connection.seed.run());
+  describe("/api", () => {
+    describe("/topics", () => {
+      it("GET status code 200, responds with an array of all topics", () => {
+        return request(app)
+          .get("/api/topics")
+          .expect(200)
+          .then(({ body }) => {
+            expect(body.topics).to.be.an("array");
+            expect(body.topics[0]).to.contain.keys("description", "slug");
+          });
       });
     });
   });
