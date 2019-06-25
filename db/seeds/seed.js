@@ -9,7 +9,6 @@ const {
 const { formatDate, formatComments, makeRefObj } = require("../utils/utils");
 
 exports.seed = function(knex, Promise) {
-  console.log("seeeeed");
   return knex.migrate
     .rollback()
     .then(() => knex.migrate.latest())
