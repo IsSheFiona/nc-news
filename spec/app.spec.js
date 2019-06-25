@@ -38,6 +38,17 @@ describe("/", () => {
               expect(body.user.username).to.equal("lurker");
             });
         });
+        it("GET: responds with status code 404, when passed a username that does not exist ", () => {
+          return request(app)
+            .get("/api/users/not_a_username")
+            .expect(404)
+            .then(({ body }) => {
+              expect(body.msg).to.equal(
+                "Sorry, this is not a registered user."
+              );
+              // if time, look at adding limitations to the characters that can be included in a username
+            });
+        });
       });
     });
   });
