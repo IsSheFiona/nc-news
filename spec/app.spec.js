@@ -51,5 +51,36 @@ describe("/", () => {
         });
       });
     });
+    describe("/articles", () => {
+      describe("/:article_id", () => {
+        it("GET status code 200, responds with a single article object", () => {
+          return request(app)
+            .get("/api/articles/9")
+            .expect(200)
+            .then(({ body }) => {
+              expect(body.article).to.contain.keys(
+                "author",
+                "title",
+                "article_id",
+                "body",
+                "topic",
+                "created_at",
+                "votes",
+                "comment_count"
+              );
+              expect(body.article.article_id).to.equal(9);
+              expect(body.article.comment_count).to.equal("2");
+            });
+        });
+      });
+    });
   });
 });
+
+//   { 9
+//     title: "They're not exactly dogs, are they?",
+//       topic: 'mitch',
+//         author: 'butter_bridge',
+//           body: 'Well? Think about it.',
+//             created_at: 533132514171,
+// }
