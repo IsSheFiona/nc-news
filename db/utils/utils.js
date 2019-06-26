@@ -1,7 +1,7 @@
 exports.formatDate = list => {
   if (!list.length) return [];
   list.forEach(article => {
-    article.created_at = new Date(article.created_at).toUTCString();
+    article.created_at = new Date(article.created_at);
   });
   return list;
 };
@@ -24,7 +24,7 @@ exports.formatComments = (comments, articleRef = {}) => {
       article_id: articleRef[comment.belongs_to],
       body: comment.body,
       votes: comment.votes,
-      created_at: new Date(comment.created_at).toUTCString()
+      created_at: new Date(comment.created_at)
     };
     return newComment;
   });

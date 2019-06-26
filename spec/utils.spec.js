@@ -25,7 +25,7 @@ describe("formatDate", () => {
         topic: "cats",
         author: "rogersop",
         body: "Bastet walks amongst us, and the cats are taking arms!",
-        created_at: "Tue, 19 Nov 2002 12:21:54 GMT"
+        created_at: new Date(1037708514171)
       }
     ];
     expect(actual).to.eql(expected);
@@ -54,14 +54,14 @@ describe("formatDate", () => {
         topic: "cats",
         author: "rogersop",
         body: "Bastet walks amongst us, and the cats are taking arms!",
-        created_at: "Tue, 19 Nov 2002 12:21:54 GMT"
+        created_at: new Date(1037708514171)
       },
       {
         title: "Eight pug gifs that remind me of mitch",
         topic: "mitch",
         author: "icellusedkars",
         body: "some gifs",
-        created_at: "Wed, 17 Nov 2010 12:21:54 GMT"
+        created_at: new Date(1289996514171)
       }
     ];
     expect(actual).to.eql(expected);
@@ -147,7 +147,7 @@ describe("formatComments", () => {
     const comments = [{ created_at: 1289996514171 }];
     const articleRef = { "They're not exactly dogs, are they?": 99 };
     const actual = formatComments(comments, articleRef);
-    expect(actual[0].created_at).to.equal("Wed, 17 Nov 2010 12:21:54 GMT");
+    expect(actual[0].created_at).to.eql(new Date(1289996514171));
   });
   it("maintains the rest of the comment's properties", () => {
     const comments = [
@@ -167,7 +167,7 @@ describe("formatComments", () => {
         body: "The owls are not what they seem.",
         author: "icellusedkars",
         votes: 20,
-        created_at: "Mon, 26 Nov 2001 12:36:03 GMT"
+        created_at: new Date(1006778163389)
       }
     ]);
   });
