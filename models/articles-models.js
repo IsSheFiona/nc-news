@@ -1,6 +1,6 @@
 const connection = require("../db/connection.js");
 
-const fetchArticleByArticleId = article_id => {
+const fetchArticleByArticleId = (article_id, voteObject) => {
   return connection
     .leftJoin("comments", "articles.article_id", "=", "comments.article_id")
     .first("articles.*")
@@ -18,4 +18,13 @@ const fetchArticleByArticleId = article_id => {
     });
 };
 
-module.exports = { fetchArticleByArticleId };
+const changeArticleVoteCount = (article_id, voteObject) => {
+  return connection
+    .where("article_id", article_id)
+    .increment("votes", voteObject)
+    .returning("*")
+    .from("articles")
+    .then(articles => articles[0]);
+};
+
+module.exports = { fetchArticleByArticleId, changeArticleVoteCount };

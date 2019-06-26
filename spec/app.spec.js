@@ -88,6 +88,17 @@ describe("/", () => {
               expect(body.msg).to.equal("Invalid request.");
             });
         });
+        it("PATCH status 200: accepts an object in the form { inc_votes: newVote } and increments or decrements the vote property of the article by the value of newVote", () => {
+          return request(app)
+            .patch("/api/articles/1")
+            .send({
+              inc_votes: 12
+            })
+            .expect(200)
+            .then(({ body }) => {
+              expect(body.article.votes).to.eql(112);
+            });
+        });
       });
     });
   });
