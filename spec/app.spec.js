@@ -172,7 +172,31 @@ describe("/", () => {
               })
               .expect(404)
               .then(({ body }) => {
-                expect(body.msg).to.equal("Article not found.");
+                expect(body.msg).to.equal("Not found.");
+              });
+          });
+          it("POST: responds with status code 400, when passed an article_id in an invalid format", () => {
+            return request(app)
+              .post("/api/articles/notanarticle/comments")
+              .send({
+                username: "lurker",
+                body: "This is the worst article I have ever read!!!"
+              })
+              .expect(400)
+              .then(({ body }) => {
+                expect(body.msg).to.equal("Invalid request.");
+              });
+          });
+          it("POST: responds with status code 400, when passed a comment object containing a username that does not exist", () => {
+            return request(app)
+              .post("/api/articles/1/comments")
+              .send({
+                username: "i_am_not_a_user",
+                body: "This is the worst article I have ever read!!!"
+              })
+              .expect(404)
+              .then(({ body }) => {
+                expect(body.msg).to.equal("Not found.");
               });
           });
         });
@@ -180,10 +204,3 @@ describe("/", () => {
     });
   });
 });
-
-//   { 9
-//     title: "They're not exactly dogs, are they?",
-//       topic: 'mitch',
-//         author: 'butter_bridge',
-//           body: 'Well? Think about it.',
-//             created_at: 533132514171,
