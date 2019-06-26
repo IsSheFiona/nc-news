@@ -47,11 +47,12 @@ const insertCommentOnArticle = (article_id, newComment) => {
     .returning("*")
     .then(([comment]) => comment);
 };
-const fetchCommentsByArticleId = article_id => {
+const fetchCommentsByArticleId = (article_id, sort_by, order) => {
   return connection
     .select("*")
     .from("comments")
-    .where("article_id", article_id);
+    .where("article_id", article_id)
+    .orderBy(sort_by || "created_at", "desc");
 };
 
 module.exports = {

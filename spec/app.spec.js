@@ -3,6 +3,7 @@ const request = require("supertest");
 const app = require("../app.js");
 const chai = require("chai");
 const { expect } = chai;
+chai.use(require("chai-sorted"));
 const connection = require("../db/connection.js");
 
 describe("/", () => {
@@ -143,7 +144,7 @@ describe("/", () => {
               expect(body.article.votes).to.eql(100);
             });
         });
-        describe("/comments", () => {
+        describe.only("/comments", () => {
           it("POST: status 201, adds a new comment to an article, responds with the posted comment", () => {
             return request(app)
               .post("/api/articles/1/comments")
@@ -226,6 +227,38 @@ describe("/", () => {
                   "created_at"
                 );
                 expect(body.comment.length).to.equal(13);
+              });
+          });
+          it("GET: reponds with status code 200 and an empty array when passed an article_id with no comments", () => {
+            return request(app)
+              .get("/api/articles/2/comments")
+              .expect(200)
+              .then(({ body }) => {
+                expect(body.comment).to.be.an("array");
+                expect(body.comment.length).to.equal(0);
+              });
+          });
+          it("GET responds with an array of comments sorted by created_at by default in descending order", () => {
+            return request(app)
+              .get("/api/articles/1/comments")
+              .then(({ body }) => {
+                expect(body.comment).to.be.descendingBy("created_at");
+              });
+          });
+          it("GET responds with an array of comments sorted according to requested criteria", () => {
+            return request(app)
+              .get("/api/articles/1/comments?sort_by=comment_id&&?order=asc")
+              .then(({ body }) => {
+                expect(body.comment).to.be.sortedBy("comment_id");
+              });
+          });
+          it("GET responds with status code 400, when passed an invalid article_id", () => {
+            return request(app)
+              .get("/api/articles/not_anArticle/comments")
+              .expect(400)
+              .then(({ body }) => {
+                console.log(body);
+                expect(body.msg).to.equal("Invalid request.");
               });
           });
         });
