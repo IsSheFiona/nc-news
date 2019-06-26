@@ -70,6 +70,22 @@ describe("/", () => {
               );
               expect(body.article.article_id).to.equal(9);
               expect(body.article.comment_count).to.equal("2");
+            }); // do error handling for article by id
+        });
+        it("GET: responds with status code 404, when passed an article_id that does not exist ", () => {
+          return request(app)
+            .get("/api/articles/500")
+            .expect(404)
+            .then(({ body }) => {
+              expect(body.msg).to.equal("Article not found.");
+            });
+        });
+        it("GET: responds with status code 400, when passed an article_id in an invalid format", () => {
+          return request(app)
+            .get("/api/articles/notanarticle")
+            .expect(400)
+            .then(({ body }) => {
+              expect(body.msg).to.equal("Invalid request.");
             });
         });
       });
@@ -83,4 +99,3 @@ describe("/", () => {
 //         author: 'butter_bridge',
 //           body: 'Well? Think about it.',
 //             created_at: 533132514171,
-// }

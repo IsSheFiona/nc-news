@@ -12,7 +12,7 @@ const fetchArticleByArticleId = article_id => {
       if (!article) {
         return Promise.reject({
           status: 404,
-          msg: "Sorry, I can't find that article."
+          msg: "Article not found."
         });
       } else return article;
     });
