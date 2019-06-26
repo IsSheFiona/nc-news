@@ -254,11 +254,26 @@ describe("/", () => {
           });
           it("GET responds with status code 400, when passed an invalid article_id", () => {
             return request(app)
-              .get("/api/articles/not_anArticle/comments")
+              .get("/api/articles/not_an_article/comments")
               .expect(400)
               .then(({ body }) => {
-                console.log(body);
                 expect(body.msg).to.equal("Invalid request.");
+              });
+          });
+          it("GET responds with status code 200 and sorts by default column, when passed a query to sort by an invalid column name", () => {
+            return request(app)
+              .get("/api/articles/1/comments?sort_by=not_a_column")
+              .expect(200)
+              .then(({ body }) => {
+                expect(body.comment).to.be.descendingBy("created_at");
+              });
+          });
+          it("GET responds with status code 200 and sorts by default column in descending order when passed an invalid order", () => {
+            return request(app)
+              .get("/api/articles/1/comments?order=backwards")
+              .expect(200)
+              .then(({ body }) => {
+                expect(body.comment).to.be.descendingBy("created_at");
               });
           });
         });
