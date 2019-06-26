@@ -143,6 +143,27 @@ describe("/", () => {
               expect(body.article.votes).to.eql(100);
             });
         });
+        describe("/comments", () => {
+          it("POST: status 201, adds a new comment to an article, responds with the posted comment", () => {
+            return request(app)
+              .post("/api/articles/1/comments")
+              .send({
+                username: "lurker",
+                body: "This is the worst article I have ever read!!!"
+              })
+              .expect(201)
+              .then(({ body }) => {
+                expect(body.comment).to.eql({
+                  comment_id: 19,
+                  body: "This is the worst article I have ever read!!!",
+                  article_id: 1,
+                  author: "lurker",
+                  votes: 0,
+                  created_at: "???"
+                });
+              });
+          });
+        });
       });
     });
   });
