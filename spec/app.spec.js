@@ -12,7 +12,7 @@ describe("/", () => {
   beforeEach(() => connection.seed.run());
   describe("/api", () => {
     describe("/topics", () => {
-      it("GET status code 200, responds with an array of all topics", () => {
+      it("GET: status code 200, responds with an array of all topics", () => {
         return request(app)
           .get("/api/topics")
           .expect(200)
@@ -25,7 +25,7 @@ describe("/", () => {
     });
     describe("/users", () => {
       describe("/:username", () => {
-        it("GET status code 200, responds with a single user object", () => {
+        it("GET: status code 200, responds with a single user object", () => {
           return request(app)
             .get("/api/users/lurker")
             .expect(200)
@@ -197,6 +197,35 @@ describe("/", () => {
               .expect(404)
               .then(({ body }) => {
                 expect(body.msg).to.equal("Not found.");
+              });
+          });
+          it("POST: responds with a status code of 200 when passed a comment object with an invalid key", () => {
+            return request(app)
+              .post("/api/articles/1/comments")
+              .send({
+                username: "i_am_not_a_user",
+                some_words: "This is the worst article I have ever read!!!"
+              })
+              .expect(400)
+              .then(({ body }) => {
+                expect(body.msg).to.equal("Invalid request.");
+              });
+          });
+          it("GET: status code 200, responds with an array of all comment objects associated with article", () => {
+            return request(app)
+              .get("/api/articles/1/comments")
+              .expect(200)
+              .then(({ body }) => {
+                expect(body.comment).to.be.an("array");
+                expect(body.comment[0]).to.contain.keys(
+                  "comment_id",
+                  "body",
+                  "article_id",
+                  "author",
+                  "votes",
+                  "created_at"
+                );
+                expect(body.comment.length).to.equal(13);
               });
           });
         });

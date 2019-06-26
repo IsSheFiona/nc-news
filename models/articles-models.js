@@ -47,9 +47,16 @@ const insertCommentOnArticle = (article_id, newComment) => {
     .returning("*")
     .then(([comment]) => comment);
 };
+const fetchCommentsByArticleId = article_id => {
+  return connection
+    .select("*")
+    .from("comments")
+    .where("article_id", article_id);
+};
 
 module.exports = {
   fetchArticleByArticleId,
   changeArticleVoteCount,
-  insertCommentOnArticle
+  insertCommentOnArticle,
+  fetchCommentsByArticleId
 };
