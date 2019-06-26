@@ -163,6 +163,18 @@ describe("/", () => {
                 });
               });
           });
+          it("POST: responds with status code 404, when passed an article_id that does not exist ", () => {
+            return request(app)
+              .post("/api/articles/500/comments")
+              .send({
+                username: "lurker",
+                body: "This is the worst article I have ever read!!!"
+              })
+              .expect(404)
+              .then(({ body }) => {
+                expect(body.msg).to.equal("Article not found.");
+              });
+          });
         });
       });
     });
