@@ -15,9 +15,11 @@ const sendArticleByArticleId = (req, res, next) => {
 const updateArticleVoteCount = (req, res, next) => {
   const { article_id } = req.params;
   const { inc_votes } = req.body;
-  changeArticleVoteCount(article_id, inc_votes).then(article => {
-    res.status(200).send({ article });
-  });
+  changeArticleVoteCount(article_id, inc_votes)
+    .then(article => {
+      res.status(200).send({ article });
+    })
+    .catch(err => next(err));
 };
 
 module.exports = { sendArticleByArticleId, updateArticleVoteCount };

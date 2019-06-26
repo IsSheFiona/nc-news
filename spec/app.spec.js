@@ -99,6 +99,50 @@ describe("/", () => {
               expect(body.article.votes).to.eql(112);
             });
         });
+        it("PATCH: responds with status code 404, when passed an article_id that does not exist ", () => {
+          return request(app)
+            .patch("/api/articles/500")
+            .send({
+              inc_votes: 12
+            })
+            .expect(404)
+            .then(({ body }) => {
+              expect(body.msg).to.equal("Article not found.");
+            });
+        });
+        it("PATCH: responds with status code 400, when passed an article_id in an invalid format", () => {
+          return request(app)
+            .patch("/api/articles/notanarticle")
+            .send({
+              inc_votes: 12
+            })
+            .expect(400)
+            .then(({ body }) => {
+              expect(body.msg).to.equal("Invalid request.");
+            });
+        });
+        it("PATCH: responds with status code 400, when passed a vote object in an invalid format", () => {
+          return request(app)
+            .patch("/api/articles/1")
+            .send({
+              inc_votes: "i am not a number"
+            })
+            .expect(400)
+            .then(({ body }) => {
+              expect(body.msg).to.equal("Invalid request.");
+            });
+        });
+        it("PATCH: responds with status code 200 and returns an unchanged article, when passed a vote object with an invalid key", () => {
+          return request(app)
+            .patch("/api/articles/1")
+            .send({
+              i_am_the_wrong_key: 12
+            })
+            .expect(200)
+            .then(({ body }) => {
+              expect(body.article.votes).to.eql(100);
+            });
+        });
       });
     });
   });
