@@ -104,7 +104,6 @@ describe("/", () => {
         return request(app)
           .get("/api/articles?author=butter_bridge")
           .then(({ body }) => {
-            console.log(body);
             expect(body.articles.length).to.equal(3);
           });
       });
@@ -113,7 +112,21 @@ describe("/", () => {
           .get("/api/articles?author=i_am_not_an_author")
           .expect(200)
           .then(({ body }) => {
-            console.log(body);
+            expect(body.articles).to.eql([]);
+          });
+      });
+      it("GET takes an topic query which returns an array of articles filtered by topic", () => {
+        return request(app)
+          .get("/api/articles?topic=cats")
+          .then(({ body }) => {
+            expect(body.articles.length).to.equal(1);
+          });
+      });
+      it("GET responds with an empty array when passed a topiuc that does not exist", () => {
+        return request(app)
+          .get("/api/articles?topic=i_am_not_a_topic")
+          .expect(200)
+          .then(({ body }) => {
             expect(body.articles).to.eql([]);
           });
       });
