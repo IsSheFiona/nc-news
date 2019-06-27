@@ -53,7 +53,7 @@ describe("/", () => {
       });
     });
     describe("/articles", () => {
-      it.only("GET: status code 200, responds with an array of all articles with the properties - author, title, article_id, topic, created_at, votes, comment_count (which is the total of all comments on the article)", () => {
+      it("GET: status code 200, responds with an array of all articles with the properties - author, title, article_id, topic, created_at, votes, comment_count (which is the total of all comments on the article)", () => {
         return request(app)
           .get("/api/articles")
           .expect(200)
@@ -71,7 +71,42 @@ describe("/", () => {
             expect(body.articles.length).to.equal(12);
           });
       });
-
+      it("GET: returns an array of articles sorted by default by date in descending order", () => {
+        return request(app)
+          .get("/api/articles")
+          .then(({ body }) => {
+            expect(body.articles).to.be.descendingBy("created_at");
+          });
+      });
+      it("GET responds with an array of articles sorted according to requested criteria", () => {
+        return request(app)
+          .get("/api/articles?sort_by=title")
+          .then(({ body }) => {
+            expect(body.articles).to.be.descendingBy("title");
+          });
+      });
+      it("GET responds with an array of articles in ascending order when requested", () => {
+        return request(app)
+          .get("/api/articles?order=asc")
+          .then(({ body }) => {
+            expect(body.articles).to.be.sortedBy("created_at");
+          });
+      });
+      it("GET responds with status code 400, when passed a query to sort by an invalid column name", () => {
+        return request(app)
+          .get("/api/articles/?sort_by=not_a_column")
+          .expect(400)
+          .then(({ body }) => {
+            expect(body.msg).to.be.equal("Invalid request.");
+          });
+      });
+      it("GET takes an author query which returns an array of articles filtered by author", () => {
+        return request(app)
+          .get("/api/articles?author=butter_bridge")
+          .then(({ body }) => {
+            expect(body.articles.length).to.equal(3);
+          });
+      });
       describe("/:article_id", () => {
         it("GET: status code 200, responds with a single article object", () => {
           return request(app)
@@ -266,7 +301,7 @@ describe("/", () => {
           });
           it("GET responds with an array of comments sorted according to requested criteria", () => {
             return request(app)
-              .get("/api/articles/1/comments?sort_by=comment_id&&?order=asc")
+              .get("/api/articles/1/comments?sort_by=comment_id&&order=asc")
               .then(({ body }) => {
                 expect(body.comment).to.be.sortedBy("comment_id");
               });
@@ -279,19 +314,20 @@ describe("/", () => {
                 expect(body.msg).to.equal("Invalid request.");
               });
           });
-          it("GET responds with status code 200 and sorts by default column, when passed a query to sort by an invalid column name", () => {
+          it("GET responds with status code 400, when passed a query to sort by an invalid column name", () => {
             return request(app)
               .get("/api/articles/1/comments?sort_by=not_a_column")
-              .expect(200)
+              .expect(400)
               .then(({ body }) => {
-                expect(body.comment).to.be.descendingBy("created_at");
+                expect(body.msg).to.be.equal("Invalid request.");
               });
           });
-          it("GET responds with status code 200 and sorts by default column in descending order when passed an invalid order", () => {
+          xit("GET responds with status code 200 and sorts by default column in descending order when passed an invalid order", () => {
             return request(app)
               .get("/api/articles/1/comments?order=backwards")
               .expect(200)
               .then(({ body }) => {
+                console.log(body.comment);
                 expect(body.comment).to.be.descendingBy("created_at");
               });
           });

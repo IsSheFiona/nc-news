@@ -47,20 +47,21 @@ const insertCommentOnArticle = (article_id, newComment) => {
     .returning("*")
     .then(([comment]) => comment);
 };
-const fetchCommentsByArticleId = (article_id, sort_by, order) => {
+const fetchCommentsByArticleId = (article_id, { sort_by, order }) => {
   return connection
     .select("*")
     .from("comments")
     .where("article_id", article_id)
-    .orderBy(sort_by || "created_at", "desc");
+    .orderBy(sort_by || "created_at", order || "desc");
 };
-const fetchArticles = () => {
+const fetchArticles = ({ sort_by, order }) => {
   return connection
     .leftJoin("comments", "articles.article_id", "=", "comments.article_id")
     .select("articles.*")
     .from("articles")
     .groupBy("articles.article_id", "comments.article_id")
-    .count("comments.article_id AS comment_count");
+    .count("comments.article_id AS comment_count")
+    .orderBy(sort_by || "created_at", order || "desc");
 };
 
 module.exports = {
