@@ -269,7 +269,7 @@ describe("/", () => {
               })
               .expect(201)
               .then(({ body }) => {
-                expect(body.comment).to.eql({
+                expect(body.comments).to.eql({
                   comment_id: 19,
                   body: "This is the worst article I have ever read!!!",
                   article_id: 1,
@@ -332,8 +332,8 @@ describe("/", () => {
               .get("/api/articles/1/comments")
               .expect(200)
               .then(({ body }) => {
-                expect(body.comment).to.be.an("array");
-                expect(body.comment[0]).to.contain.keys(
+                expect(body.comments).to.be.an("array");
+                expect(body.comments[0]).to.contain.keys(
                   "comment_id",
                   "body",
                   "article_id",
@@ -341,7 +341,7 @@ describe("/", () => {
                   "votes",
                   "created_at"
                 );
-                expect(body.comment.length).to.equal(13);
+                expect(body.comments.length).to.equal(13);
               });
           });
           it("GET: reponds with status code 200 and an empty array when passed an article_id with no comments", () => {
@@ -349,22 +349,22 @@ describe("/", () => {
               .get("/api/articles/2/comments")
               .expect(200)
               .then(({ body }) => {
-                expect(body.comment).to.be.an("array");
-                expect(body.comment.length).to.equal(0);
+                expect(body.comments).to.be.an("array");
+                expect(body.comments.length).to.equal(0);
               });
           });
           it("GET responds with an array of comments sorted by created_at by default in descending order", () => {
             return request(app)
               .get("/api/articles/1/comments")
               .then(({ body }) => {
-                expect(body.comment).to.be.descendingBy("created_at");
+                expect(body.comments).to.be.descendingBy("created_at");
               });
           });
           it("GET responds with an array of comments sorted according to requested criteria", () => {
             return request(app)
               .get("/api/articles/1/comments?sort_by=comment_id&&order=asc")
               .then(({ body }) => {
-                expect(body.comment).to.be.sortedBy("comment_id");
+                expect(body.comments).to.be.sortedBy("comment_id");
               });
           });
           it("GET responds with status code 400, when passed an invalid article_id", () => {
@@ -388,7 +388,7 @@ describe("/", () => {
               .get("/api/articles/1/comments?order=backwards")
               .expect(200)
               .then(({ body }) => {
-                expect(body.comment).to.be.descendingBy("created_at");
+                expect(body.comments).to.be.descendingBy("created_at");
               });
           });
         });

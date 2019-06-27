@@ -29,8 +29,8 @@ const addCommentToArticle = (req, res, next) => {
   const { article_id } = req.params;
   const newComment = req.body;
   insertCommentOnArticle(article_id, newComment)
-    .then(comment => {
-      res.status(201).send({ comment });
+    .then(comments => {
+      res.status(201).send({ comments });
     })
     .catch(err => next(err));
 };
@@ -38,8 +38,8 @@ const addCommentToArticle = (req, res, next) => {
 const sendCommentsByArticleId = (req, res, next) => {
   const { article_id } = req.params;
   fetchCommentsByArticleId(article_id, req.query)
-    .then(comment => {
-      res.status(200).send({ comment });
+    .then(comments => {
+      res.status(200).send({ comments });
     })
     .catch(err => next(err));
 };
