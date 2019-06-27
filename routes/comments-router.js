@@ -7,6 +7,9 @@ const {
 commentsRouter
   .route("/:comment_id")
   .patch(updateCommentVoteCount)
-  .delete(removeComment);
+  .delete(removeComment)
+  .all((req, res) => {
+    res.status(405).send({ msg: "Sorry that method is not happening" });
+  });
 
 module.exports = commentsRouter;
