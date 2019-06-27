@@ -23,6 +23,11 @@ describe("/", () => {
             expect(body.topics.length).to.equal(3);
           });
       });
+      it("DELETE: responds with status 405 as this method is not allowed", () => {
+        return request(app)
+          .delete("/api/topics")
+          .expect(405);
+      });
     });
     describe("/users", () => {
       describe("/:username", () => {
@@ -50,6 +55,11 @@ describe("/", () => {
               // if time, look at adding limitations to the characters that can be included in a username
             });
         });
+        it("PATCH: responds with status code 405 as this method is not allowed", () => {
+          return request(app)
+            .patch("/api/users/lurker")
+            .expect(405);
+        });
       });
     });
     describe("/articles", () => {
@@ -68,7 +78,6 @@ describe("/", () => {
               "votes",
               "comment_count"
             );
-            expect(body.articles.length).to.equal(12);
           });
       });
       it("GET: returns an array of articles sorted by default by date in descending order", () => {
@@ -144,6 +153,14 @@ describe("/", () => {
           .expect(200)
           .then(({ body }) => {
             expect(body.articles).to.eql([]);
+          });
+      });
+      it("GET: responds with a page of articles with a default limit set to 10", () => {
+        return request(app)
+          .get("/api/articles")
+          .expect(200)
+          .then(({ body }) => {
+            expect(body.articles.length).to.equal(10);
           });
       });
       describe("/:article_id", () => {
@@ -236,6 +253,11 @@ describe("/", () => {
             .then(({ body }) => {
               expect(body.article.votes).to.eql(100);
             });
+        });
+        it("DELETE: responds with status code 405 as this method is not allowed", () => {
+          return request(app)
+            .delete("/api/articles/1")
+            .expect(405);
         });
         describe("/comments", () => {
           it("POST: status 201, adds a new comment to an article, responds with the posted comment", () => {
