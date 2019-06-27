@@ -48,6 +48,7 @@ const insertCommentOnArticle = (article_id, newComment) => {
     .then(([comment]) => comment);
 };
 const fetchCommentsByArticleId = (article_id, { sort_by, order }) => {
+  if (order !== "asc" && order !== "desc") order = "desc";
   return connection
     .select("*")
     .from("comments")
