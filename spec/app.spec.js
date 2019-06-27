@@ -100,10 +100,11 @@ describe("/", () => {
             expect(body.msg).to.be.equal("Invalid request.");
           });
       });
-      it("GET takes an author query which returns an array of articles filtered by author", () => {
+      it.only("GET takes an author query which returns an array of articles filtered by author", () => {
         return request(app)
           .get("/api/articles?author=butter_bridge")
           .then(({ body }) => {
+            console.log(body);
             expect(body.articles.length).to.equal(3);
           });
       });

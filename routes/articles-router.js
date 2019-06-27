@@ -8,7 +8,6 @@ const {
 } = require("../controllers/articles-controller.js");
 
 articlesRouter.route("/").get(sendArticles);
-console.log("send articles");
 
 articlesRouter
   .route("/:article_id")
