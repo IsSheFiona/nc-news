@@ -78,21 +78,21 @@ describe("/", () => {
             expect(body.articles).to.be.descendingBy("created_at");
           });
       });
-      it("GET responds with an array of articles sorted according to requested criteria", () => {
+      it("GET: responds with an array of articles sorted according to requested criteria", () => {
         return request(app)
           .get("/api/articles?sort_by=title")
           .then(({ body }) => {
             expect(body.articles).to.be.descendingBy("title");
           });
       });
-      it("GET responds with an array of articles in ascending order when requested", () => {
+      it("GET: responds with an array of articles in ascending order when requested", () => {
         return request(app)
           .get("/api/articles?order=asc")
           .then(({ body }) => {
             expect(body.articles).to.be.sortedBy("created_at");
           });
       });
-      it("GET responds with status code 400, when passed a query to sort by an invalid column name", () => {
+      it("GET: responds with status code 400, when passed a query to sort by an invalid column name", () => {
         return request(app)
           .get("/api/articles/?sort_by=not_a_column")
           .expect(400)
@@ -100,16 +100,24 @@ describe("/", () => {
             expect(body.msg).to.be.equal("Invalid request.");
           });
       });
-      it("GET takes an author query which returns an array of articles filtered by author", () => {
+      it("GET: takes an author query which returns an array of articles filtered by author", () => {
         return request(app)
           .get("/api/articles?author=butter_bridge")
           .then(({ body }) => {
             expect(body.articles.length).to.equal(3);
           });
       });
-      it("GET responds with an empty array when passed an author that does not exist", () => {
+      it("GET: responds with an empty array when passed an author that does not exist", () => {
         return request(app)
           .get("/api/articles?author=i_am_not_an_author")
+          .expect(200)
+          .then(({ body }) => {
+            expect(body.articles).to.eql([]);
+          });
+      });
+      it("GET: responds with an empty array when passed an author who has no articles associated with them", () => {
+        return request(app)
+          .get("/api/articles?author=lurker")
           .expect(200)
           .then(({ body }) => {
             expect(body.articles).to.eql([]);
@@ -122,9 +130,17 @@ describe("/", () => {
             expect(body.articles.length).to.equal(1);
           });
       });
-      it("GET responds with an empty array when passed a topiuc that does not exist", () => {
+      it("GET responds with an empty array when passed a topic that does not exist", () => {
         return request(app)
           .get("/api/articles?topic=i_am_not_a_topic")
+          .expect(200)
+          .then(({ body }) => {
+            expect(body.articles).to.eql([]);
+          });
+      });
+      it("GET: responds with an empty array when passed a topic that has no articles associated with it", () => {
+        return request(app)
+          .get("/api/articles?topic=paper")
           .expect(200)
           .then(({ body }) => {
             expect(body.articles).to.eql([]);
@@ -148,7 +164,7 @@ describe("/", () => {
               );
               expect(body.article.article_id).to.equal(9);
               expect(body.article.comment_count).to.equal("2");
-            }); // do error handling for article by id
+            });
         });
         it("GET: responds with status code 404, when passed an article_id that does not exist ", () => {
           return request(app)
@@ -356,64 +372,76 @@ describe("/", () => {
           });
         });
       });
-    });
-    describe.only("/comments", () => {
-      describe("/:comment_id", () => {
-        it("PATCH status 200: accepts an object in the form { inc_votes: newVote } and increments or decrements the vote property of the comment by the value of newVote", () => {
-          return request(app)
-            .patch("/api/comments/17")
-            .send({
-              inc_votes: 12
-            })
-            .expect(200)
-            .then(({ body }) => {
-              expect(body.comment.votes).to.eql(32);
-            });
+      describe("/comments", () => {
+        describe("/:comment_id", () => {
+          it("PATCH status 200: accepts an object in the form { inc_votes: newVote } and increments or decrements the vote property of the comment by the value of newVote", () => {
+            return request(app)
+              .patch("/api/comments/17")
+              .send({
+                inc_votes: 12
+              })
+              .expect(200)
+              .then(({ body }) => {
+                expect(body.comment.votes).to.eql(32);
+              });
+          });
+          it("PATCH: responds with status code 404, when passed a comment_id that does not exist ", () => {
+            return request(app)
+              .patch("/api/comments/500")
+              .send({
+                inc_votes: 12
+              })
+              .expect(404)
+              .then(({ body }) => {
+                expect(body.msg).to.equal("Comment not found.");
+              });
+          });
+          it("PATCH: responds with status code 400, when passed a comment_id in an invalid format", () => {
+            return request(app)
+              .patch("/api/articles/notacomment")
+              .send({
+                inc_votes: 12
+              })
+              .expect(400)
+              .then(({ body }) => {
+                expect(body.msg).to.equal("Invalid request.");
+              });
+          });
+          it("PATCH: responds with status code 400, when passed a vote object in an invalid format", () => {
+            return request(app)
+              .patch("/api/comments/17")
+              .send({
+                inc_votes: "i am not a number"
+              })
+              .expect(400)
+              .then(({ body }) => {
+                expect(body.msg).to.equal("Invalid request.");
+              });
+          });
+          xit("PATCH: responds with status code 200 and returns an unchanged comment, when passed a vote object with an invalid key", () => {
+            return request(app)
+              .patch("/api/comments/17")
+              .send({
+                i_am_the_wrong_key: 12
+              })
+              .expect(200)
+              .then(({ body }) => {
+                expect(body.article.votes).to.eql(20);
+              });
+            //why is this behaviour different from article
+          });
+          it("DELETE: responds with 204 and deletes a comment", () => {
+            return request(app)
+              .delete("/api/comments/18")
+              .send("comment deleted")
+              .expect(204);
+          });
         });
-        it("PATCH: responds with status code 404, when passed a comment_id that does not exist ", () => {
+        it("DELETE: responds with 400 when passed a comment_id which does not exist", () => {
           return request(app)
-            .patch("/api/comments/500")
-            .send({
-              inc_votes: 12
-            })
-            .expect(404)
-            .then(({ body }) => {
-              expect(body.msg).to.equal("Comment not found.");
-            });
-        });
-        it("PATCH: responds with status code 400, when passed a comment_id in an invalid format", () => {
-          return request(app)
-            .patch("/api/articles/notacomment")
-            .send({
-              inc_votes: 12
-            })
-            .expect(400)
-            .then(({ body }) => {
-              expect(body.msg).to.equal("Invalid request.");
-            });
-        });
-        it("PATCH: responds with status code 400, when passed a vote object in an invalid format", () => {
-          return request(app)
-            .patch("/api/comments/17")
-            .send({
-              inc_votes: "i am not a number"
-            })
-            .expect(400)
-            .then(({ body }) => {
-              expect(body.msg).to.equal("Invalid request.");
-            });
-        });
-        xit("PATCH: responds with status code 200 and returns an unchanged comment, when passed a vote object with an invalid key", () => {
-          return request(app)
-            .patch("/api/comments/17")
-            .send({
-              i_am_the_wrong_key: 12
-            })
-            .expect(200)
-            .then(({ body }) => {
-              expect(body.article.votes).to.eql(20);
-            });
-          //why is this behaviour different from article
+            .delete("/api/comments/99")
+            .send("comment deleted")
+            .expect(400);
         });
       });
     });

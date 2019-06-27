@@ -16,20 +16,11 @@ const changeCommentVoteCount = (comment_id, voteObject) => {
     });
 };
 
-module.exports = { changeCommentVoteCount };
+const deleteComment = comment_id => {
+  return connection
+    .where("comment_id", comment_id)
+    .del()
+    .from("comments");
+};
 
-// const changeArticleVoteCount = (article_id, voteObject) => {
-//   return connection
-//     .where("article_id", article_id)
-//     .increment("votes", voteObject || 0)
-//     .returning("*")
-//     .from("articles")
-//     .then(([article]) => {
-//       if (!article) {
-//         return Promise.reject({
-//           status: 404,
-//           msg: "Article not found."
-//         });
-//       } else return article;
-//     });
-// };
+module.exports = { changeCommentVoteCount, deleteComment };
