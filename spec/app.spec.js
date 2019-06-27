@@ -53,8 +53,27 @@ describe("/", () => {
       });
     });
     describe("/articles", () => {
+      it.only("GET: status code 200, responds with an array of all articles with the properties - author, title, article_id, topic, created_at, votes, comment_count (which is the total of all comments on the article)", () => {
+        return request(app)
+          .get("/api/articles")
+          .expect(200)
+          .then(({ body }) => {
+            expect(body.articles[0]).to.contain.keys(
+              "author",
+              "title",
+              "article_id",
+              "body",
+              "topic",
+              "created_at",
+              "votes",
+              "comment_count"
+            );
+            expect(body.articles.length).to.equal(12);
+          });
+      });
+
       describe("/:article_id", () => {
-        it("GET status code 200, responds with a single article object", () => {
+        it("GET: status code 200, responds with a single article object", () => {
           return request(app)
             .get("/api/articles/9")
             .expect(200)
@@ -144,7 +163,7 @@ describe("/", () => {
               expect(body.article.votes).to.eql(100);
             });
         });
-        describe.only("/comments", () => {
+        describe("/comments", () => {
           it("POST: status 201, adds a new comment to an article, responds with the posted comment", () => {
             return request(app)
               .post("/api/articles/1/comments")

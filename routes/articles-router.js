@@ -3,10 +3,11 @@ const {
   sendArticleByArticleId,
   updateArticleVoteCount,
   addCommentToArticle,
-  sendCommentsByArticleId
+  sendCommentsByArticleId,
+  sendArticles
 } = require("../controllers/articles-controller.js");
 
-articlesRouter.route("/");
+articlesRouter.route("/").get(sendArticles);
 console.log("send articles");
 
 articlesRouter

@@ -2,7 +2,8 @@ const {
   fetchArticleByArticleId,
   changeArticleVoteCount,
   insertCommentOnArticle,
-  fetchCommentsByArticleId
+  fetchCommentsByArticleId,
+  fetchArticles
 } = require("../models/articles-models.js");
 
 const sendArticleByArticleId = (req, res, next) => {
@@ -42,10 +43,18 @@ const sendCommentsByArticleId = (req, res, next) => {
     })
     .catch(err => next(err));
 };
+const sendArticles = (req, res, next) => {
+  fetchArticles()
+    .then(articles => {
+      res.status(200).send({ articles });
+    })
+    .catch(next);
+};
 
 module.exports = {
   sendArticleByArticleId,
   updateArticleVoteCount,
   addCommentToArticle,
-  sendCommentsByArticleId
+  sendCommentsByArticleId,
+  sendArticles
 };
