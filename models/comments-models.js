@@ -10,7 +10,7 @@ const changeCommentVoteCount = (comment_id, voteObject) => {
       if (!comment) {
         return Promise.reject({
           status: 404,
-          msg: "Article not found."
+          msg: "Comment not found."
         });
       } else return comment;
     });

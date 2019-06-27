@@ -370,6 +370,51 @@ describe("/", () => {
               expect(body.comment.votes).to.eql(32);
             });
         });
+        it("PATCH: responds with status code 404, when passed a comment_id that does not exist ", () => {
+          return request(app)
+            .patch("/api/comments/500")
+            .send({
+              inc_votes: 12
+            })
+            .expect(404)
+            .then(({ body }) => {
+              expect(body.msg).to.equal("Comment not found.");
+            });
+        });
+        it("PATCH: responds with status code 400, when passed a comment_id in an invalid format", () => {
+          return request(app)
+            .patch("/api/articles/notacomment")
+            .send({
+              inc_votes: 12
+            })
+            .expect(400)
+            .then(({ body }) => {
+              expect(body.msg).to.equal("Invalid request.");
+            });
+        });
+        it("PATCH: responds with status code 400, when passed a vote object in an invalid format", () => {
+          return request(app)
+            .patch("/api/comments/17")
+            .send({
+              inc_votes: "i am not a number"
+            })
+            .expect(400)
+            .then(({ body }) => {
+              expect(body.msg).to.equal("Invalid request.");
+            });
+        });
+        xit("PATCH: responds with status code 200 and returns an unchanged comment, when passed a vote object with an invalid key", () => {
+          return request(app)
+            .patch("/api/comments/17")
+            .send({
+              i_am_the_wrong_key: 12
+            })
+            .expect(200)
+            .then(({ body }) => {
+              expect(body.article.votes).to.eql(20);
+            });
+          //why is this behaviour different from article
+        });
       });
     });
   });
