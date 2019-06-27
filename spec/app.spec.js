@@ -357,5 +357,20 @@ describe("/", () => {
         });
       });
     });
+    describe.only("/comments", () => {
+      describe("/:comment_id", () => {
+        it("PATCH status 200: accepts an object in the form { inc_votes: newVote } and increments or decrements the vote property of the comment by the value of newVote", () => {
+          return request(app)
+            .patch("/api/comments/17")
+            .send({
+              inc_votes: 12
+            })
+            .expect(200)
+            .then(({ body }) => {
+              expect(body.comment.votes).to.eql(32);
+            });
+        });
+      });
+    });
   });
 });
