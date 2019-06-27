@@ -15,9 +15,8 @@ const updateCommentVoteCount = (req, res, next) => {
 
 const removeComment = (req, res, next) => {
   const { comment_id } = req.params;
-  console.log(comment_id);
   deleteComment(comment_id)
-    .then(comment => res.status(204).send("comment deleted"))
+    .then(comment => res.status(204).send({}))
     .catch(next);
 };
 

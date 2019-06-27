@@ -361,12 +361,11 @@ describe("/", () => {
                 expect(body.msg).to.be.equal("Invalid request.");
               });
           });
-          xit("GET responds with status code 200 and sorts by default column in descending order when passed an invalid order", () => {
+          it("GET responds with status code 200 and sorts by default column in descending order when passed an invalid order", () => {
             return request(app)
               .get("/api/articles/1/comments?order=backwards")
               .expect(200)
               .then(({ body }) => {
-                console.log(body.comment);
                 expect(body.comment).to.be.descendingBy("created_at");
               });
           });
@@ -418,7 +417,7 @@ describe("/", () => {
                 expect(body.msg).to.equal("Invalid request.");
               });
           });
-          xit("PATCH: responds with status code 200 and returns an unchanged comment, when passed a vote object with an invalid key", () => {
+          it("PATCH: responds with status code 200 and returns an unchanged comment, when passed a vote object with an invalid key", () => {
             return request(app)
               .patch("/api/comments/17")
               .send({
@@ -426,22 +425,24 @@ describe("/", () => {
               })
               .expect(200)
               .then(({ body }) => {
-                expect(body.article.votes).to.eql(20);
+                expect(body.comment.votes).to.eql(20);
               });
-            //why is this behaviour different from article
           });
           it("DELETE: responds with 204 and deletes a comment", () => {
             return request(app)
               .delete("/api/comments/18")
-              .send("comment deleted")
               .expect(204);
           });
-        });
-        it("DELETE: responds with 400 when passed a comment_id which does not exist", () => {
-          return request(app)
-            .delete("/api/comments/99")
-            .send("comment deleted")
-            .expect(400);
+          it("DELETE: responds with 404 when passed a comment_id which does not exist", () => {
+            return request(app)
+              .delete("/api/comments/99")
+              .expect(404);
+          });
+          it("DELETE: responds with 400 when passed an invalid comment_id", () => {
+            return request(app)
+              .delete("/api/comments/not_a_comment_id")
+              .expect(400);
+          });
         });
       });
     });

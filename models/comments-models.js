@@ -20,7 +20,15 @@ const deleteComment = comment_id => {
   return connection
     .where("comment_id", comment_id)
     .del()
-    .from("comments");
+    .from("comments")
+    .then(comment => {
+      if (!comment) {
+        return Promise.reject({
+          status: 404,
+          msg: "Comment not found."
+        });
+      }
+    });
 };
 
 module.exports = { changeCommentVoteCount, deleteComment };
