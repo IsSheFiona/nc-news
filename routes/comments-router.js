@@ -3,13 +3,12 @@ const {
   updateCommentVoteCount,
   removeComment
 } = require("../controllers/comments-controller.js");
+const { methodNotAllowed } = require("../errors/index.js");
 
 commentsRouter
   .route("/:comment_id")
   .patch(updateCommentVoteCount)
   .delete(removeComment)
-  .all((req, res) => {
-    res.status(405).send({ msg: "Sorry that method is not happening" });
-  });
+  .all(methodNotAllowed);
 
 module.exports = commentsRouter;

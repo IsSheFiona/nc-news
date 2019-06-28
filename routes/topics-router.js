@@ -1,11 +1,10 @@
 const topicsRouter = require("express").Router();
 const { sendTopics } = require("../controllers/topics-controller.js");
+const { methodNotAllowed } = require("../errors/index.js");
 
 topicsRouter
   .route("/")
   .get(sendTopics)
-  .all((req, res) => {
-    res.status(405).send({ msg: "Sorry that method is not happening" });
-  });
+  .all(methodNotAllowed);
 
 module.exports = topicsRouter;

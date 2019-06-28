@@ -1,15 +1,12 @@
 const usersRouter = require("express").Router();
 const { sendUserByUsername } = require("../controllers/users-controller.js");
+const { methodNotAllowed } = require("../errors/index.js");
 
-usersRouter.route("/").all((req, res) => {
-  res.status(405).send({ msg: "Sorry that method is not happening" });
-});
+usersRouter.route("/").all(methodNotAllowed);
 
 usersRouter
   .route("/:username")
   .get(sendUserByUsername)
-  .all((req, res) => {
-    res.status(405).send({ msg: "Sorry that method is not happening" });
-  });
+  .all(methodNotAllowed);
 
 module.exports = usersRouter;
