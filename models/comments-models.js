@@ -1,9 +1,9 @@
 const connection = require("../db/connection.js");
 
-const changeCommentVoteCount = (comment_id, voteObject) => {
+const changeCommentVoteCount = (comment_id, inc_votes) => {
   return connection
     .where("comment_id", comment_id)
-    .increment("votes", voteObject || 0)
+    .increment("votes", inc_votes || 0)
     .returning("*")
     .from("comments")
     .then(([comment]) => {
