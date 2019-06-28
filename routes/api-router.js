@@ -6,13 +6,11 @@ const commentsRouter = require("./comments-router.js");
 const methodNotAllowed = require("../errors/index.js");
 const endpoints = require("../endpoints.json");
 
-// app.get('/search', function (req, res) {
-//   res.header("Content-Type", 'application/json');
-//   res.send(JSON.stringify(data));
-// })
-
 apiRouter.route("/").get(function(req, res, next) {
-  res.status(200).send(endpoints);
+  res
+    .status(200)
+    .send(endpoints)
+    .all(methodNotAllowed);
 });
 
 apiRouter.use("/topics", topicsRouter);
