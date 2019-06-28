@@ -9,19 +9,119 @@
       "topics": [{ "slug": "football", "description": "Footie!" }]
     }
   },
+  "GET /api/users/:username": {
+    "desciption": "serves an array containing one , as selected by username",
+    "queries": [],
+    "exampleResponse": {
+      "username": "weegembump",
+      "avatar_url": "https://www.upandrunning.co.uk/media/catalog/product/cache/1/image/650x/040ec09b1e35df139433887a97daa66f/m/r/mr-bump.jpg",
+      "name": "Gemma Bump"
+    }
+  },
   "GET /api/articles": {
-    "description": "serves an array of all topics",
+    "description": "serves an array of all articles",
     "queries": ["author", "topic", "sort_by", "order"],
     "exampleResponse": {
       "articles": [
         {
+          "article_id": 1,
           "title": "Seafood substitutions are increasing",
           "topic": "cooking",
           "author": "weegembump",
           "body": "Text from the article..",
+          "created_at": 1527695953341,
+          "votes": 0,
+          "comment_count": 0
+        }
+      ]
+    }
+  },
+  "GET /api/articles/:article_id": {
+    "description": "serves an array containing one article, as selected by article_id",
+    "queries": [],
+    "exampleResponse": {
+      "article": [
+        {
+          "article_id": 1,
+          "title": "Seafood substitutions are increasing",
+          "topic": "cooking",
+          "author": "weegembump",
+          "body": "Text from the article..",
+          "created_at": 1527695953341,
+          "votes": 0,
+          "comment_count": 0
+        }
+      ]
+    }
+  },
+  "PATCH /api/articles/:article_id": {
+    "description": "increments the vote count of the selected article by a specified amount and serves an array containing the updated article",
+    "queries": [],
+    "exampleResponse": {
+      "article": [
+        {
+          "article_id": 1,
+          "title": "Seafood substitutions are increasing",
+          "topic": "cooking",
+          "author": "weegembump",
+          "body": "Text from the article..",
+          "created_at": 1527695953341,
+          "votes": 1,
+          "comment_count": 0
+        }
+      ]
+    }
+  },
+  "GET /api/articles/:article_id/comments": {
+    "description": "serves an array of all comment objects associated with the selected article",
+    "queries": ["sort_by", "order"],
+    "exampleResponse": {
+      "comments": [
+        {
+          "comment_id": 1,
+          "body": "Comment text.",
+          "article_id": 1,
+          "author": "lurker",
+          "votes": 10,
           "created_at": 1527695953341
         }
       ]
     }
+  },
+  "POST /api/articles/:article_id/comments": {
+    "description": "adds a comment to the selected article and serves the comment",
+    "queries": [],
+    "exampleResponse": {
+      "comment": [
+        {
+          "comment_id": 1,
+          "body": "Comment text.",
+          "article_id": 1,
+          "author": "lurker",
+          "votes": 10,
+          "created_at": 1527695953341
+        }
+      ]
+    }
+  },
+  "PATCH /api/comments/:comment_id": {
+    "desription": "increments the vote count of the selected comment by a specified amount and serves an array containing the updated comment",
+    "queries": [],
+    "exampleResponse": {
+      "comment": [
+        {
+          "comment_id": 1,
+          "body": "Comment text.",
+          "article_id": 1,
+          "author": "lurker",
+          "votes": 11,
+          "created_at": 1527695953341
+        }
+      ]
+    }
+  },
+  "DELETE /api/comments/:comment_id": {
+    "description": "removes the selected comment and returns a status of 204 and no data",
+    "queries": []
   }
 }
