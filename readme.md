@@ -1,5 +1,6 @@
 **NC News**  
-An express server providing data to a reddit clone. A sql database has been seeded and interactions with the server take place using Postgres. Queries are built using knex.
+An express server providing data to a reddit clone. A sql database has been seeded and interactions with the server take place using Postgres. Queries are built using knex.  
+Hosted at https://fionas-nc-news.herokuapp.com/api
 
 _Endpoints_
 
