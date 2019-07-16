@@ -8,7 +8,7 @@ exports.up = function(knex, Promise) {
       .references("users.username")
       .notNullable();
     commentsTable.integer("votes").defaultTo(0);
-    commentsTable.string("created_at").defaultTo(knex.fn.now());
+    commentsTable.timestamp("created_at").defaultTo(knex.fn.now());
   });
 };
 
