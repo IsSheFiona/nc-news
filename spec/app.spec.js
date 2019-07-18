@@ -92,6 +92,14 @@ describe("/", () => {
             );
           });
       });
+      it("GET: returns a count of all articles", () => {
+        return request(app)
+          .get("/api/articles")
+          .expect(200)
+          .then(({ body }) => {
+            expect(body.articleCount[0].count).to.equal("12");
+          });
+      });
       it("GET: returns an array of articles sorted by default by date in descending order", () => {
         return request(app)
           .get("/api/articles")

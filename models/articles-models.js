@@ -54,7 +54,7 @@ const fetchCommentsByArticleId = (article_id, { sort_by, order }) => {
     .where("article_id", article_id)
     .orderBy(sort_by || "created_at", order || "desc");
 };
-const fetchArticles = ({ sort_by, order, author, topic, limit }) => {
+const fetchArticles = ({ sort_by, order, author, topic, limit, p }) => {
   return connection
     .leftJoin("comments", "articles.article_id", "=", "comments.article_id")
     .select("articles.*")
@@ -63,6 +63,7 @@ const fetchArticles = ({ sort_by, order, author, topic, limit }) => {
     .count("comments.article_id AS comment_count")
     .orderBy(sort_by || "created_at", order || "desc")
     .limit(limit || 10)
+    .offset((p - 1) * 10 || 0)
     .modify(authorQuery => {
       if (author) {
         authorQuery.where("articles.author", "=", author);
@@ -75,10 +76,15 @@ const fetchArticles = ({ sort_by, order, author, topic, limit }) => {
     });
 };
 
+const fetchArticleCount = () => {
+  return connection.from("articles").count("article_id");
+};
+
 module.exports = {
   fetchArticleByArticleId,
   changeArticleVoteCount,
   insertCommentOnArticle,
   fetchCommentsByArticleId,
-  fetchArticles
+  fetchArticles,
+  fetchArticleCount
 };

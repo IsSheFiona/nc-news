@@ -4,7 +4,8 @@ const {
   changeArticleVoteCount,
   insertCommentOnArticle,
   fetchCommentsByArticleId,
-  fetchArticles
+  fetchArticles,
+  fetchArticleCount
 } = require("../models/articles-models.js");
 
 const checkExists = (value, table, column) => {
@@ -65,18 +66,19 @@ const sendCommentsByArticleId = (req, res, next) => {
 
 const sendArticles = (req, res, next) => {
   const { author, topic } = req.query;
-  fetchArticles(req.query)
-    .then(articles => {
+  Promise.all([fetchArticles(req.query), fetchArticleCount()])
+    // fetchArticles(req.query)
+    .then(([articles, articleCount]) => {
       const authorExists = author
         ? checkExists(author, "users", "username")
         : null;
       const topicExists = topic ? checkExists(topic, "topics", "slug") : null;
-      return Promise.all([authorExists, topicExists, articles]);
+      return Promise.all([authorExists, topicExists, articles, articleCount]);
     })
-    .then(([authorExists, topicExists, articles]) => {
+    .then(([authorExists, topicExists, articles, articleCount]) => {
       if (authorExists === false || topicExists === false)
         return Promise.reject({ status: 404, msg: "Not found." });
-      else res.status(200).send({ articles });
+      else res.status(200).send({ articles, articleCount });
     })
     .catch(next);
 };
