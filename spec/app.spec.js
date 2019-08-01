@@ -64,7 +64,6 @@ describe("/", () => {
               expect(body.msg).to.equal(
                 "Sorry, this is not a registered user."
               );
-              // if time, look at adding limitations to the characters that can be included in a username
             });
         });
         it("PATCH: responds with status code 405 as this method is not allowed", () => {
